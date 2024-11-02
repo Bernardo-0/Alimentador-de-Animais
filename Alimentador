@@ -1,0 +1,33 @@
+const int pino = 8;                        
+const unsigned long tempoEspera = 10800000;       
+const unsigned long tempoLigado = 60000;             
+
+unsigned long tempoInicio;                        
+bool estadoSaida = LOW;                         
+bool tempoCompleto = false;                    
+
+void setup() {
+  pinMode(pino, OUTPUT);                   
+  digitalWrite(pino, estadoSaida);         
+  tempoInicio = millis();                         
+}
+
+void loop() {
+  unsigned long tempoAtual = millis();         
+
+  // Verifica se o tempo de espera iniciall foi realmente de 3 horas
+  if (!tempoCompleto && (tempoAtual - tempoInicio >= tempoEspera)) {
+    tempoCompleto = true;                     
+    estadoSaida = HIGH;                         
+    digitalWrite(pino, estadoSaida);       
+    tempoInicio = tempoAtual;                    
+  }
+
+  // Verifica se a saída está ligada e se se passou 1 minuto
+  if (tempoCompleto && (tempoAtual - tempoInicio >= tempoLigado)) {
+    estadoSaida = LOW;                          
+    digitalWrite(pino, estadoSaida);       
+    tempoCompleto = false;                     
+    tempoInicio = tempoAtual;                    
+  }
+}
